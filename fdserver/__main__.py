@@ -856,20 +856,20 @@ def main(_):
 
 def run():
     """Main entry point"""
-    PATH = os.path.dirname(pkgutil.get_loader("wfdserver").get_filename())
+    PATH = os.path.dirname(pkgutil.get_loader("fdserver").get_filename())
     os.system(
         "xdg-icon-resource install --size 64 --context apps --mode user "
-        f"{PATH}/data/k6gte.wfdserver-32.png k6gte-wfdserver"
+        f"{PATH}/data/k6gte.fdserver-32.png k6gte-wfdserver"
     )
     os.system(
         "xdg-icon-resource install --size 64 --context apps --mode user "
-        f"{PATH}/data/k6gte.wfdserver-64.png k6gte-wfdserver"
+        f"{PATH}/data/k6gte.fdserver-64.png k6gte-wfdserver"
     )
     os.system(
         "xdg-icon-resource install --size 64 --context apps --mode user "
-        f"{PATH}/data/k6gte.wfdserver-128.png k6gte-wfdserver"
+        f"{PATH}/data/k6gte.fdserver-128.png k6gte-wfdserver"
     )
-    os.system(f"xdg-desktop-menu install {PATH}/data/k6gte-wfdserver.desktop")
+    os.system(f"xdg-desktop-menu install {PATH}/data/k6gte-fdserver.desktop")
     if args.log:
         cabrillo()
         curses.endwin()
