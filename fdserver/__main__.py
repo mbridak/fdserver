@@ -21,12 +21,19 @@ import os
 import sys
 import threading
 import argparse
+import pkgutil
 
 from itertools import chain
 from json import JSONDecodeError, loads, dumps
 from pathlib import Path
-from lib.server_database import DataBase
-from lib.version import __version__
+from shutil import copyfile
+
+try:
+    from lib.server_database import DataBase
+    from lib.version import __version__
+except ModuleNotFoundError:
+    from fdserver.lib.server_database import DataBase
+    from fdserver.lib.version import __version__
 
 # from lib.settings import Settings
 # pylint: disable=no-name-in-module, invalid-name, c-extension-no-member, global-statement
@@ -102,6 +109,7 @@ PEOPLEWINDOW = curses.newwin(6, 28, 17, 51)
 
 people = {}
 
+n1mm_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 height, width = THE_SCREEN.getmaxyx()
 if height < 24 or width < 80:
@@ -131,6 +139,9 @@ try:
             COUNTRY = preference.get("country")
             EMAIL = preference.get("email")
     else:
+        working_path = os.path.dirname(pkgutil.get_loader("fdserver").get_filename())
+        data_path = working_path + "/data/server_preferences.json"
+        copyfile(data_path, "./server_preferences.json")
         print("-=* No Settings File Using Defaults *=-")
 except IOError as exception:
     logging.critical("%s", exception)
@@ -170,6 +181,37 @@ def ptitle(win, y, x1, x2, title):
     win.addstr(y, x, title, curses.color_pair(7))
     win.addch(y, x - 1, curses.ACS_RTEE)
     win.addch(y, x + title_length, curses.ACS_LTEE)
+
+
+def send_xml_score():
+    """send xml score"""
+    ops = DB.get_operators()
+    operator_list = []
+    lop = points()
+    for operators in ops:
+        operator_list.append(operators[0])
+    xemel = (
+        '<?xml version="1.0" encoding="UTF-8" ?>\n'
+        "<dynamicresults>\n"
+        "<contest>ARRL-FIELD-DAY</contest>\n"
+        f"<call>{OURCALL}</call>\n"
+        f'<ops>{",".join(operator_list)}</ops>\n'
+        '<class power="HIGH" assisted = "ASSISTED" transmitter="UNLIMITED" '
+        'ops="MULTI-OP" bands="ALL" mode="MIXED" overlay="N/A"></class>\n'
+        f"<club>{NAMEOFCLUB}</club>\n"
+        "<qth>\n<dxcccountry>K</dxcccountry>\n<cqzone>4</cqzone>\n<iaruzone>8</iaruzone>\n"
+        "<arrlsection>MI</arrlsection>\n<stprvoth>MI</stprvoth>\n<grid6>EN82BK</grid6>\n</qth>\n"
+        f"<breakdown>\n{lop}</breakdown>\n"
+        f"<score>{calcscore()}</score>\n"
+        f'<timestamp>{datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}</timestamp>\n'
+        "</dynamicresults>\n"
+    )
+
+    bytes_to_send = str(xemel).encode("ascii")
+    n1mm_socket.sendto(
+        bytes_to_send,
+        (NODE_RED_SERVER_IP, NODE_RED_SERVER_PORT),
+    )
 
 
 def send_pulse():
