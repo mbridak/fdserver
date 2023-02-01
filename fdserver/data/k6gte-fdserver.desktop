@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=FDServer
+StartupWMClass=fdserver
+GenericName=K6GTE Field Server
+Comment=Field Day group logger
+Keywords=console;commandline;amateur radio;ham;logger;
+Exec=fdserver
+Icon=k6gte-fdserver
+Terminal=true
+Type=Application
+Categories=HamRadio;
+StartupNotify=true
+X-GNOME-SingleWindow=true
