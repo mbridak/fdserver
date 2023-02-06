@@ -2,6 +2,7 @@
     "ourcall": "W1AW",
     "ourclass": "3A",
     "oursection": "ORG",
+    "clubname": "Insert your club name here.",
     "bonus": {
         "emergency_power": {
             "bool": 0,

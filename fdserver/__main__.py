@@ -17,6 +17,7 @@ import logging
 import socket
 import time
 from time import gmtime, strftime
+from datetime import datetime
 import os
 import sys
 import threading
@@ -83,9 +84,15 @@ MULTICAST_PORT = 2239
 MULTICAST_GROUP = "224.1.1.1"
 INTERFACE_IP = "0.0.0.0"
 
+NODE_RED_SERVER_IP = "127.0.0.1"
+NODE_RED_SERVER_PORT = 12062
+
+BONUS = {}
+
 OURCALL = "XXXX"
 OURCLASS = "XX"
 OURSECTION = "XXX"
+CLUB_NAME = "Raddest Club Ever"
 BATTERYPOWER = 0
 QRP = 0
 HIGHPOWER = 0
@@ -130,6 +137,7 @@ try:
             OURCALL = preference.get("ourcall")
             OURCLASS = preference.get("ourclass")
             OURSECTION = preference.get("oursection")
+            CLUB_NAME = preference.get("clubname")
             BATTERYPOWER = preference.get("batterypower")
             NAME = preference.get("name")
             ADDRESS = preference.get("address")
@@ -138,6 +146,8 @@ try:
             POSTALCODE = preference.get("postalcode")
             COUNTRY = preference.get("country")
             EMAIL = preference.get("email")
+            NODE_RED_SERVER_IP = preference.get("node_red_server_ip")
+            NODE_RED_SERVER_PORT = preference.get("node_red_server_port")
     else:
         working_path = os.path.dirname(pkgutil.get_loader("fdserver").get_filename())
         data_path = working_path + "/data/server_preferences.json"
@@ -183,6 +193,50 @@ def ptitle(win, y, x1, x2, title):
     win.addch(y, x + title_length, curses.ACS_LTEE)
 
 
+def points():
+    """return points as xml tags"""
+    bands = ["160", "80", "40", "20", "15", "10", "6", "2"]
+    blist = []
+    list_o_bands = DB.get_bands()
+    if list_o_bands:
+        for count in list_o_bands:
+            blist.append(count[0])
+
+    message = ""
+    totalcw = 0
+    totalph = 0
+    totaldi = 0
+    for band in bands:
+        cwt = DB.get_band_mode_tally(band, "CW")
+        dit = DB.get_band_mode_tally(band, "DG")
+        pht = DB.get_band_mode_tally(band, "PH")
+
+        totalcw += cwt[0]
+        totalph += pht[0]
+        totaldi += dit[0]
+
+        line = ""
+        if cwt[0]:
+            line += f'<qso band="{band}" mode="CW">{cwt[0]}</qso>\n'
+            line += f'<point band="{band}" mode="CW">{cwt[0]*2}</point>\n'
+        if pht[0]:
+            line += f'<qso band="{band}" mode="PH">{pht[0]}</qso>\n'
+            line += f'<point band="{band}" mode="PH">{pht[0]}</point>\n'
+        if dit[0]:
+            line += f'<qso band="{band}" mode="DIGI">{dit[0]}</qso>\n'
+            line += f'<point band="{band}" mode="DIGI">{dit[0]*2}</point>\n'
+        if cwt[0] + pht[0] + dit[0]:
+            line += (
+                f'<qso band="{band}" mode="total">{cwt[0] + pht[0] + dit[0]}</qso>\n'
+            )
+            line += f'<point band="{band}" mode="ALL">{(cwt[0]*2) + pht[0] + (dit[0]*2)}</point>\n'
+        message += line
+
+    message += f'<qso band="total" mode="ALL">{totalcw + totalph + totaldi}</qso>\n'
+    message += f'<point band="total" mode="ALL">{(totalcw * 2) + totalph + (totaldi * 2)}</point>\n'
+    return message
+
+
 def send_xml_score():
     """send xml score"""
     ops = DB.get_operators()
@@ -198,7 +252,7 @@ def send_xml_score():
         f'<ops>{",".join(operator_list)}</ops>\n'
         '<class power="HIGH" assisted = "ASSISTED" transmitter="UNLIMITED" '
         'ops="MULTI-OP" bands="ALL" mode="MIXED" overlay="N/A"></class>\n'
-        f"<club>{NAMEOFCLUB}</club>\n"
+        f"<club>{CLUB_NAME}</club>\n"
         "<qth>\n<dxcccountry>K</dxcccountry>\n<cqzone>4</cqzone>\n<iaruzone>8</iaruzone>\n"
         "<arrlsection>MI</arrlsection>\n<stprvoth>MI</stprvoth>\n<grid6>EN82BK</grid6>\n</qth>\n"
         f"<breakdown>\n{lop}</breakdown>\n"
@@ -219,6 +273,7 @@ def send_pulse():
     while True:
         pulse = b'{"cmd": "PING", "host": "server"}'
         s.sendto(pulse, (MULTICAST_GROUP, MULTICAST_PORT))
+        send_xml_score()
         time.sleep(10)
 
 
@@ -616,7 +671,7 @@ def main(_):
     THE_SCREEN.addstr(f" {OURCLASS}", curses.color_pair(7))
     THE_SCREEN.addstr(4, 2, "Section_:")
     THE_SCREEN.addstr(f" {OURSECTION}", curses.color_pair(7))
-    THE_SCREEN.addstr(5, 2, "Battery_:")
+    # THE_SCREEN.addstr(5, 2, "Battery_:")
     THE_SCREEN.addstr(f" {bool(BATTERYPOWER)}", curses.color_pair(7))
 
     THE_SCREEN.addstr(2, 25, "Multicast Group: ")
