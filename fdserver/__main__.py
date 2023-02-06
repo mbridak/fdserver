@@ -802,7 +802,7 @@ def main(_):
                         for count in list_o_bands:
                             blist.append(count[0])
 
-                    message = "\nBand   CW    PH    DI\n"
+                    message = "\nBand    CW    PH    DI\n"
                     for band in bands:
                         cwt = DB.get_band_mode_tally(band, "CW")
                         dit = DB.get_band_mode_tally(band, "DI")
@@ -834,11 +834,7 @@ def main(_):
                     )
 
                     score = (((QRP * 3) * BATTERYPOWER) + 2) * points
-                    message += (
-                        f"\nScore {score}\n"
-                        f"Last Hour {lasthour}\n"
-                        f"Last 15 {last15}"
-                    )
+                    message += f"Score {score}  Last Hour {lasthour}  Last 15 {last15}"
                     packet = {"cmd": "CHAT"}
                     packet["sender"] = "Server"
                     packet["message"] = message
