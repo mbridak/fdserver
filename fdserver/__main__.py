@@ -910,15 +910,15 @@ def run():
     PATH = os.path.dirname(pkgutil.get_loader("fdserver").get_filename())
     os.system(
         "xdg-icon-resource install --size 32 --context apps --mode user "
-        f"{PATH}/data/k6gte.fdserver-32.png k6gte-fdserver"
+        f"{PATH}/data/k6gte-fdserver-32.png k6gte-fdserver"
     )
     os.system(
         "xdg-icon-resource install --size 64 --context apps --mode user "
-        f"{PATH}/data/k6gte.fdserver-64.png k6gte-fdserver"
+        f"{PATH}/data/k6gte-fdserver-64.png k6gte-fdserver"
     )
     os.system(
         "xdg-icon-resource install --size 128 --context apps --mode user "
-        f"{PATH}/data/k6gte.fdserver-128.png k6gte-fdserver"
+        f"{PATH}/data/k6gte-fdserver-128.png k6gte-fdserver"
     )
     os.system(f"xdg-desktop-menu install {PATH}/data/k6gte-fdserver.desktop")
     if args.log:

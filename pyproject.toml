@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fdserver" 
-version = "23.2.7"
+version = "23.2.7.1"
 description = "Field Day group logging server"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -32,7 +32,7 @@ classifiers = [
 where = ["."]
 
 [tool.setuptools.package-data]
-"wfdserver.data" = ["*.*",]
+"fdserver.data" = ["*.*",]
 
 [project.scripts]
 fdserver = "fdserver.__main__:run"
