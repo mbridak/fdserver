@@ -1,9 +1,9 @@
 # Field Day log aggregating server
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python: 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg?logo=python&style=for-the-badge)](https://www.python.org/downloads/)
-![Made With: Ancient Technology](https://img.shields.io/badge/Made%20with-Ancient%20technology-red?style=for-the-badge)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/fdserver?label=PYPI-Downloads&logo=pypi&style=for-the-badge)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python: 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg?logo=python)](https://www.python.org/downloads/)
+![Made With: Ancient Technology](https://img.shields.io/badge/Made%20with-Ancient%20technology-red)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/fdserver?label=PYPI-Downloads&logo=pypi)
 
 ![logo](https://github.com/mbridak/fdserver/raw/master/fdserver/data/k6gte-fdserver-128.png)
 
