@@ -5,7 +5,7 @@
 ![Made With: Ancient Technology](https://img.shields.io/badge/Made%20with-Ancient%20technology-red?style=for-the-badge)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/fdserver?label=PYPI-Downloads&logo=pypi&style=for-the-badge)
 
-![logo](https://github.com/mbridak/fdserver/raw/master/fdserver/data/k6gte.fdserver-128.png)
+![logo](https://github.com/mbridak/fdserver/raw/master/fdserver/data/k6gte-fdserver-128.png)
 
 ## TOC
 
