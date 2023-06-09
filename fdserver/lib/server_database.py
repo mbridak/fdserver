@@ -287,3 +287,13 @@ class DataBase:
             cursor = conn.cursor()
             cursor.execute("select DISTINCT grid from contacts")
             return cursor.fetchall()
+
+    def get_dupe_status(self, call, band, mode):
+        """See is call exists on band/mode return bool"""
+        with sqlite3.connect(self.database) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                f"select count(*) as dupecount from contacts where "
+                f"callsign = '{call}' AND band = '{band}' AND mode = '{mode}';"
+            )
+            return cursor.fetchone()[0]
