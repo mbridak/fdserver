@@ -36,7 +36,14 @@ clients. So a group or club can submit a group cabrillo log.
 ## Installation
 
 ```bash
+# install
 pip install fdserver
+
+# update
+pip install -U fdserver
+
+# remove
+pip uninstall fdserver
 ```
 
 ```text
