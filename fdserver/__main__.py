@@ -714,7 +714,6 @@ def main(_):
             logging.debug("%s", json_data)
             timestamp = strftime("%H:%M:%S", gmtime())
             if json_data.get("cmd") == "POST":
-
                 DB.log_contact(
                     (
                         json_data.get("unique_id"),
@@ -765,6 +764,22 @@ def main(_):
 
             if json_data.get("cmd") == "GET":
                 LOG.add_item(f"[{timestamp}] {json_data}")
+                comm_log()
+                continue
+
+            if json_data.get("cmd") == "DUPE":
+                LOG.add_item(f"[{timestamp}] Checking Dupe: {json_data.get('contact')}")
+                packet = {"cmd": "RESPONSE"}
+                packet["recipient"] = json_data.get("station")
+                packet["subject"] = "DUPE"
+                packet["contact"] = json_data.get("contact")
+                _call = json_data.get("contact")
+                _mode = json_data.get("mode")
+                _band = json_data.get("band")
+                the_count = DB.get_dupe_status(_call, _band, _mode)
+                packet["isdupe"] = the_count
+                bytes_to_send = bytes(dumps(packet), encoding="ascii")
+                s.sendto(bytes_to_send, (MULTICAST_GROUP, MULTICAST_PORT))
                 comm_log()
                 continue
 
@@ -849,7 +864,6 @@ def main(_):
 
             if json_data.get("cmd") == "CHAT":
                 if "@stats" in json_data.get("message"):
-
                     bands = ["160", "80", "40", "20", "15", "10", "6", "2"]
                     blist = []
                     list_o_bands = DB.get_bands()
