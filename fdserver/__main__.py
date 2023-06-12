@@ -278,7 +278,11 @@ def send_pulse():
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+if sys.platform.startswith('darwin'):
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+else:
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 s.bind(("", MULTICAST_PORT))
 mreq = socket.inet_aton(MULTICAST_GROUP) + socket.inet_aton(INTERFACE_IP)
 s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, bytes(mreq))
