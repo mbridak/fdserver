@@ -15,6 +15,7 @@
   - [No really what is it](#no-really-what-is-it)
   - [Screenshot](#screenshot)
   - [Installation](#installation)
+  - [Recent Changes](#recent-changes)
   - [Configuration and first run](#configuration-and-first-run)
 
 ## What is it
@@ -55,6 +56,10 @@ options:
   -h, --help  show this help message and exit
   -l, --log   Generate log
 ```
+
+## Recent Changes
+
+- [23.6.12] Merged PR from @wvolz to handle MacOS port reuse.
 
 ## Configuration and first run
 
