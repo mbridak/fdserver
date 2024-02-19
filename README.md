@@ -59,6 +59,7 @@ options:
 
 ## Recent Changes
 
+- [24.2.19] Removed datetime.utcnow() and pkgutil.get_loader() deprecations.
 - [23.6.12] Merged PR from @wvolz to handle MacOS port reuse.
 
 ## Configuration and first run
