@@ -17,12 +17,11 @@ import logging
 import socket
 import time
 from time import gmtime, strftime
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import sys
 import threading
 import argparse
-import pkgutil
 
 from itertools import chain
 from json import JSONDecodeError, loads, dumps
@@ -149,7 +148,7 @@ try:
             NODE_RED_SERVER_IP = preference.get("node_red_server_ip")
             NODE_RED_SERVER_PORT = preference.get("node_red_server_port")
     else:
-        working_path = os.path.dirname(pkgutil.get_loader("fdserver").get_filename())
+        working_path = os.path.dirname(__loader__.get_filename())
         data_path = working_path + "/data/server_preferences.json"
         copyfile(data_path, "./server_preferences.json")
         print("-=* No Settings File Using Defaults *=-")
@@ -257,7 +256,7 @@ def send_xml_score():
         "<arrlsection>MI</arrlsection>\n<stprvoth>MI</stprvoth>\n<grid6>EN82BK</grid6>\n</qth>\n"
         f"<breakdown>\n{lop}</breakdown>\n"
         f"<score>{calcscore()}</score>\n"
-        f'<timestamp>{datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}</timestamp>\n'
+        f'<timestamp>{datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")}</timestamp>\n'
         "</dynamicresults>\n"
     )
 
@@ -278,7 +277,7 @@ def send_pulse():
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-if sys.platform.startswith('darwin'):
+if sys.platform.startswith("darwin"):
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 else:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -381,9 +380,9 @@ def get_stats():
         QRP,
     ) = DB.stats()
 
-    points = (int(cwcontacts) * 2) + (int(digitalcontacts) * 2) + int(phonecontacts)
+    _points = (int(cwcontacts) * 2) + (int(digitalcontacts) * 2) + int(phonecontacts)
 
-    score = (((QRP * 3) * BATTERYPOWER) + 2) * points
+    score = (((QRP * 3) * BATTERYPOWER) + 2) * _points
 
     THE_SCREEN.addstr(2, 73, f"{score}", curses.color_pair(7))
     THE_SCREEN.addstr(3, 73, f"{lasthour}", curses.color_pair(7))
@@ -900,13 +899,13 @@ def main(_):
                         QRP,
                     ) = DB.stats()
 
-                    points = (
+                    _points = (
                         (int(cwcontacts) * 2)
                         + (int(digitalcontacts) * 2)
                         + int(phonecontacts)
                     )
 
-                    score = (((QRP * 3) * BATTERYPOWER) + 2) * points
+                    score = (((QRP * 3) * BATTERYPOWER) + 2) * _points
                     message += f"Score {score}  Last Hour {lasthour}  Last 15 {last15}"
                     packet = {"cmd": "CHAT"}
                     packet["sender"] = "Server"
@@ -925,7 +924,7 @@ def main(_):
 
 def run():
     """Main entry point"""
-    PATH = os.path.dirname(pkgutil.get_loader("fdserver").get_filename())
+    PATH = os.path.dirname(__loader__.get_filename())
     os.system(
         "xdg-icon-resource install --size 32 --context apps --mode user "
         f"{PATH}/data/k6gte-fdserver-32.png k6gte-fdserver"
