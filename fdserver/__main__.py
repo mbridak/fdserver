@@ -349,7 +349,7 @@ def show_people():
                 PEOPLEWINDOW.addnstr(
                     yline,
                     xcol,
-                    f"{op_callsign.rjust(6,' ')} {people.get(op_callsign).rjust(6, ' ')}",
+                    f"{op_callsign.rjust(6,' ')} {people.get(op_callsign, '').rjust(6, ' ')}",
                     13,
                     curses.color_pair(2) | curses.A_BOLD,
                 )
@@ -357,7 +357,7 @@ def show_people():
                 PEOPLEWINDOW.addnstr(
                     yline,
                     xcol,
-                    f"{op_callsign.rjust(6,' ')} {people.get(op_callsign).rjust(6, ' ')}",
+                    f"{op_callsign.rjust(6,' ')} {people.get(op_callsign, '').rjust(6, ' ')}",
                     13,
                 )
         except curses.error:
