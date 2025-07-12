@@ -152,8 +152,8 @@ try:
         data_path = working_path + "/data/server_preferences.json"
         copyfile(data_path, "./server_preferences.json")
         print("-=* No Settings File Using Defaults *=-")
-except IOError as exception:
-    logging.critical("%s", exception)
+except (IOError, JSONDecodeError) as exception:
+    logging.critical("Error loading ./server_preferences.json: %s", exception)
 
 
 def prectangle(win, uly, ulx, lry, lrx):
