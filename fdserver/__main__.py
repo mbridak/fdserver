@@ -154,6 +154,8 @@ try:
         print("-=* No Settings File Using Defaults *=-")
 except (IOError, JSONDecodeError) as exception:
     logging.critical("Error loading ./server_preferences.json: %s", exception)
+    curses.endwin()
+    sys.exit()
 
 
 def prectangle(win, uly, ulx, lry, lrx):
